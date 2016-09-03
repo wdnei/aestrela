@@ -1,11 +1,11 @@
-a=Grafo('a');
-b=Grafo('b');
-c=Grafo('c');
-d=Grafo('d');
-e=Grafo('e');
-f=Grafo('f');
-g=Grafo('g');
-h=Grafo('h');
+a=Node('a');
+b=Node('b');
+c=Node('c');
+d=Node('d');
+e=Node('e');
+f=Node('f');
+g=Node('g');
+h=Node('h');
 
 a.addFilho(b);
 a.addFilho(c);

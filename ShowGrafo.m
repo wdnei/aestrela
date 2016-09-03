@@ -9,7 +9,7 @@ function [matrixRelacoes] = ShowGrafo(grafos )
     labels={};
     for i = 1:len
         mapObj(grafos{i}.id)=i;
-        labels{end+1}=evalc('disp(grafos{i}.val)');
+        labels{end+1}=evalc('disp(grafos{i}.label)');
     end
     
     relacoes=[];

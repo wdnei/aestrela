@@ -1,13 +1,13 @@
-function [grafosConvertidos,noInicial,noDestino]= findPathParse(matrixMapa)
-% Converte uma matrix de mapa em grafo de caminhos
+function [NodesConvertidos,noInicial,noDestino]= findPathParse(matrixMapa)
+% Converte uma matrix de mapa em Node de caminhos
 %exemplo de mapa 
 %1's significa barreiras ou caminhos invalidos
 %2 ponto inicial
 %3 ponto destino
-% matrixMap=[0,1,1,1,0,0,0,0;...
+% matrixMap=[2,1,1,1,0,0,0,0;...
 %     0,1,1,1,0,0,0,0;...
 %     0,1,1,1,0,0,0,0;...
-%     0,1,1,1,0,0,0,0;...
+%     0,1,1,1,0,0,3,0;...
 %     0,0,0,0,0,0,0,0];
 
 [alturaMapa,larguraMapa]=size(matrixMapa);
@@ -15,8 +15,8 @@ function [grafosConvertidos,noInicial,noDestino]= findPathParse(matrixMapa)
 noInicial=NaN;
 noDestino=NaN;
 
-mapGrafos = containers.Map;
-%varre todo o mapa e o transforma em grafo
+mapNodes = containers.Map;
+%varre todo o mapa e o transforma em Node
 for linhaAtual=1:alturaMapa
     for colunaAtual=1:larguraMapa
         % ignorar quando for um caminho invalido
@@ -25,28 +25,28 @@ for linhaAtual=1:alturaMapa
         end
         
         
-        valorGrafoAtual=[linhaAtual colunaAtual];
+        valorNodeAtual=[linhaAtual colunaAtual];
         
-        grafoAtual=NaN;
-        %verifica se grafo ja foi criado, caso contrario o cria e adiciona
-        %ao dicionario de grafos
-        if(mapGrafos.isKey(num2str(valorGrafoAtual)))
-            grafoAtual=mapGrafos(num2str(valorGrafoAtual));
+        NodeAtual=NaN;
+        %verifica se Node ja foi criado, caso contrario o cria e adiciona
+        %ao dicionario de Nodes
+        if(mapNodes.isKey(num2str(valorNodeAtual)))
+            NodeAtual=mapNodes(num2str(valorNodeAtual));
         else
-            grafoAtual=Grafo(valorGrafoAtual);
-            mapGrafos(num2str(valorGrafoAtual))=grafoAtual;
+            NodeAtual=Node(valorNodeAtual);
+            mapNodes(num2str(valorNodeAtual))=NodeAtual;
         end
         
         
         if(matrixMapa(linhaAtual,colunaAtual)==2)
-            noInicial=grafoAtual;
+            noInicial=NodeAtual;
         end
         
         if(matrixMapa(linhaAtual,colunaAtual)==3)
-            noDestino=grafoAtual;
+            noDestino=NodeAtual;
         end
         
-        %busca direcoes que podem ser seguidas do grafo
+        %busca direcoes que podem ser seguidas do Node
         direcoes={};
         
         %norte
@@ -78,7 +78,43 @@ for linhaAtual=1:alturaMapa
                 direcoes{end+1}=leste;
             end
         end
-        %transforma direcoes em grafos
+        
+        %diagonal norte leste
+        if(linhaAtual-1>0 && colunaAtual+1<=larguraMapa)
+            if(matrixMapa(linhaAtual-1,colunaAtual+1)~=1)
+                direcao=[linhaAtual-1 colunaAtual+1];
+                direcoes{end+1}=direcao;
+            end
+        end
+
+        
+        %diagonal norte oeste
+        if(linhaAtual-1>0 && colunaAtual-1>0 )
+            if(matrixMapa(linhaAtual-1,colunaAtual-1)~=1)
+                direcao=[linhaAtual-1 colunaAtual-1];
+                direcoes{end+1}=direcao;
+            end
+        end
+        
+        % diagonal sul leste
+        if(linhaAtual+1<=alturaMapa && colunaAtual-1>0)
+            if(matrixMapa(linhaAtual+1,colunaAtual-1)~=1)
+                direcao=[linhaAtual+1 colunaAtual-1];
+                direcoes{end+1}=direcao;
+            end
+        end
+        
+        %diagonal sul oeste
+        if(linhaAtual+1<=alturaMapa && colunaAtual-1>0)
+            if(matrixMapa(linhaAtual+1,colunaAtual-1)~=1)
+                direcao=[linhaAtual+1 colunaAtual-1];
+                direcoes{end+1}=direcao;
+            end
+        end
+        
+        
+        
+        %transforma direcoes em Nodes
         for d=1:length(direcoes)
             
             direcao=direcoes{d};
@@ -86,26 +122,21 @@ for linhaAtual=1:alturaMapa
             if(direcao==NaN)
                 continue;
             end
-            grafoFilho=NaN;
-            if(mapGrafos.isKey(num2str(direcao)))
-                grafoFilho=mapGrafos(num2str(direcao));
+            NodeFilho=NaN;
+            if(mapNodes.isKey(num2str(direcao)))
+                NodeFilho=mapNodes(num2str(direcao));
             else
-                grafoFilho=Grafo(direcao);
-                mapGrafos(num2str(direcao))=grafoFilho;
+                NodeFilho=Node(direcao);
+                mapNodes(num2str(direcao))=NodeFilho;
             end
             
-            grafoAtual.addFilho(grafoFilho);
-            
-            %disp(strcat(num2str(grafoAtual.val),'->',num2str(grafoFilho.val)));
+            NodeAtual.addFilho(NodeFilho);
         end
     end
 end
 
-%disp(mapGrafos.values);
+NodesConvertidos=mapNodes.values;
 
-%mapGrafos.values
-grafosConvertidos=mapGrafos.values;
-%ShowGrafo(mapGrafos.values);
 end
 
 
