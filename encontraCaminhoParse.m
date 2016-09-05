@@ -1,21 +1,29 @@
-%exemplo de mapa 1's significa barreiras ou caminhos invalidos
-map=[0,1,1,1,0,0,0,0;...
-    0,1,1,1,0,0,0,0;...
-    0,1,1,1,0,0,0,0;...
-    0,1,1,1,0,0,0,0;...
-    0,0,0,0,0,0,0,0];
+function [NodesConvertidos,noInicial,noDestino]= encontraCaminhoParse(matrixMapa)
+% Converte uma matrix de mapa em Node de caminhos
+%exemplo de mapa 
+%1's significa barreiras ou caminhos invalidos
+%2 ponto inicial
+%3 ponto destino
+% matrixMap=[2,1,1,1,0,0,0,0;...
+%     0,1,1,1,0,0,0,0;...
+%     0,1,1,1,0,0,0,0;...
+%     0,1,1,1,0,0,3,0;...
+%     0,0,0,0,0,0,0,0];
 
-[alturaMapa,larguraMapa]=size(map);
+[alturaMapa,larguraMapa]=size(matrixMapa);
 
+noInicial=NaN;
+noDestino=NaN;
 
 mapNodes = containers.Map;
 %varre todo o mapa e o transforma em Node
 for linhaAtual=1:alturaMapa
     for colunaAtual=1:larguraMapa
         % ignorar quando for um caminho invalido
-        if(map(linhaAtual,colunaAtual)==1)
+        if(matrixMapa(linhaAtual,colunaAtual)==1)
             continue;
         end
+        
         
         valorNodeAtual=[linhaAtual colunaAtual];
         
@@ -29,28 +37,35 @@ for linhaAtual=1:alturaMapa
             mapNodes(num2str(valorNodeAtual))=NodeAtual;
         end
         
+        
+        if(matrixMapa(linhaAtual,colunaAtual)==2)
+            noInicial=NodeAtual;
+        end
+        
+        if(matrixMapa(linhaAtual,colunaAtual)==3)
+            noDestino=NodeAtual;
+        end
+        
         %busca direcoes que podem ser seguidas do Node
         direcoes={};
         
-        
-        
         %norte
         if(linhaAtual-1>0)
-            if(map(linhaAtual-1,colunaAtual)~=1)
+            if(matrixMapa(linhaAtual-1,colunaAtual)~=1)
                 norte=[linhaAtual-1 colunaAtual];
                 direcoes{end+1}=norte;
             end
         end
         %sul
         if(linhaAtual+1<=alturaMapa)
-            if(map(linhaAtual+1,colunaAtual)~=1)
+            if(matrixMapa(linhaAtual+1,colunaAtual)~=1)
                 sul=[linhaAtual+1 colunaAtual];
                 direcoes{end+1}=sul;
             end
         end
         %oeste
         if(colunaAtual-1>0)
-            if(map(linhaAtual,colunaAtual-1)~=1)
+            if(matrixMapa(linhaAtual,colunaAtual-1)~=1)
                 oeste=[linhaAtual colunaAtual-1];
                 direcoes{end+1}=oeste;
             end
@@ -58,16 +73,15 @@ for linhaAtual=1:alturaMapa
         
         %leste
         if(colunaAtual+1<=larguraMapa)
-            if(map(linhaAtual,colunaAtual+1)~=1)
+            if(matrixMapa(linhaAtual,colunaAtual+1)~=1)
                 leste=[linhaAtual colunaAtual+1];
                 direcoes{end+1}=leste;
             end
         end
         
-        
         %diagonal norte leste
         if(linhaAtual-1>0 && colunaAtual+1<=larguraMapa)
-            if(map(linhaAtual-1,colunaAtual+1)~=1)
+            if(matrixMapa(linhaAtual-1,colunaAtual+1)~=1)
                 direcao=[linhaAtual-1 colunaAtual+1];
                 direcoes{end+1}=direcao;
             end
@@ -76,7 +90,7 @@ for linhaAtual=1:alturaMapa
         
         %diagonal norte oeste
         if(linhaAtual-1>0 && colunaAtual-1>0 )
-            if(map(linhaAtual-1,colunaAtual-1)~=1)
+            if(matrixMapa(linhaAtual-1,colunaAtual-1)~=1)
                 direcao=[linhaAtual-1 colunaAtual-1];
                 direcoes{end+1}=direcao;
             end
@@ -84,7 +98,7 @@ for linhaAtual=1:alturaMapa
         
         % diagonal sul leste
         if(linhaAtual+1<=alturaMapa && colunaAtual-1>0)
-            if(map(linhaAtual+1,colunaAtual-1)~=1)
+            if(matrixMapa(linhaAtual+1,colunaAtual-1)~=1)
                 direcao=[linhaAtual+1 colunaAtual-1];
                 direcoes{end+1}=direcao;
             end
@@ -92,17 +106,19 @@ for linhaAtual=1:alturaMapa
         
         %diagonal sul oeste
         if(linhaAtual+1<=alturaMapa && colunaAtual-1>0)
-            if(map(linhaAtual+1,colunaAtual-1)~=1)
+            if(matrixMapa(linhaAtual+1,colunaAtual-1)~=1)
                 direcao=[linhaAtual+1 colunaAtual-1];
                 direcoes{end+1}=direcao;
             end
         end
         
+        
+        
         %transforma direcoes em Nodes
         for d=1:length(direcoes)
             
             direcao=direcoes{d};
-            disp(direcao);
+            
             if(direcao==NaN)
                 continue;
             end
@@ -115,18 +131,13 @@ for linhaAtual=1:alturaMapa
             end
             
             NodeAtual.addFilho(NodeFilho);
-            
-            %disp(strcat(num2str(NodeAtual.val),'->',num2str(NodeFilho.val)));
         end
     end
 end
 
-%disp(mapNodes.values);
+NodesConvertidos=mapNodes.values;
 
-%mapNodes.values
-
-ShowNode(mapNodes.values);
-
+end
 
 
 

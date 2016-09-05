@@ -14,6 +14,12 @@ classdef Busca < handle
             % Destino
             % funcao_custo - custo ou distancia ate o proximo Node
             
+            if(nodeInicial == NaN || nodeDestino == NaN)
+               path=NaN;
+               error('Node inicial ou final inválido');
+                return;
+            end
+            
             % conjunto de node ja avaliados
             fechadoSet=containers.Map;
             
