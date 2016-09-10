@@ -97,9 +97,9 @@ for linhaAtual=1:alturaMapa
         end
         
         % diagonal sul leste
-        if(linhaAtual+1<=alturaMapa && colunaAtual-1>0)
-            if(matrixMapa(linhaAtual+1,colunaAtual-1)~=1)
-                direcao=[linhaAtual+1 colunaAtual-1];
+        if(linhaAtual+1<=alturaMapa && colunaAtual+1<=larguraMapa)
+            if(matrixMapa(linhaAtual+1,colunaAtual+1)~=1)
+                direcao=[linhaAtual+1 colunaAtual+1];
                 direcoes{end+1}=direcao;
             end
         end

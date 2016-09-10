@@ -1,8 +1,8 @@
 %exemplo 0
 map0=[0,1,1,3;...
       2,1,1,0;...
-      0,1,0,1;...
-      0,0,0,1];
+      0,0,0,1;...
+      0,1,0,1];
 
 
 %exemplo 1
@@ -36,6 +36,7 @@ map2= [2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;...
         ];
 
         
+%exemplo a ser usado    
 matrixMap=map0;
 
 %transforma a matrix em Nodes ou Grafo
@@ -43,7 +44,10 @@ matrixMap=map0;
 
 %mostra o grafo gerado
 %ShowGrafo(grafosConvertidos);
-
+%return;
+%busca melhor caminho usando A*
+%retorna os caminhos ou node a serem seguidos
 result=Busca.AStarSearch1(noInicial,noDestino);
 
+%mostra o resultado em forma de imagem
 encontraCaminhoMostraResultado(matrixMap,result);

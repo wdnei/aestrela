@@ -6,6 +6,10 @@ function [] = encontraCaminhoMostraResultado(matrixMapa,resultadoNodes )
 % Azul claro - caminho seguido
 % Azul escuro - barreiras
 
+if(~iscell(resultadoNodes))
+    disp('Nenhum resultado encontrado');
+    return;
+end
 
 lenResult=length(resultadoNodes);
 
